@@ -23,3 +23,8 @@ update host profiles every minute.
 Visit `http://127.0.0.1:5000/progress_form` to update progress for existing
 hosts. You can query current host data via `GET /hosts` and update progress via
 `POST /hosts/<id>/progress`.
+
+## Livehouse Scheduling Scripts
+
+Apps Script modules for managing livehouse event scheduling reside in
+`livehouse_scripts/`. See that directory's README for module descriptions and setup instructions.
