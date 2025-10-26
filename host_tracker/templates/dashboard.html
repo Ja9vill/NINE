@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NINE - Host Tracker Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black-primary: #0a0a0a;
+            --black-secondary: #1a1a1a;
+            --black-tertiary: #2a2a2a;
+            --gold-primary: #d4af37;
+            --gold-secondary: #f4d03f;
+            --gold-accent: #ffd700;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --shadow-gold: 0 4px 20px rgba(212, 175, 55, 0.3);
+            --shadow-dark: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--black-primary) 0%, var(--black-secondary) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--black-secondary) 0%, var(--black-tertiary) 100%);
+            padding: 2rem 0;
+            box-shadow: var(--shadow-dark);
+            border-bottom: 2px solid var(--gold-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold-accent), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--gold-primary);
+            background: transparent;
+            color: var(--gold-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background: var(--gold-primary);
+            color: var(--black-primary);
+            box-shadow: var(--shadow-gold);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-secondary) 100%);
+            color: var(--black-primary);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--gold-secondary) 0%, var(--gold-accent) 100%);
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            margin: 2rem 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--black-secondary) 0%, var(--black-tertiary) 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: var(--shadow-dark);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold-primary), var(--gold-accent));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-gold);
+            border-color: var(--gold-primary);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold-primary);
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Hosts Section */
+        .hosts-section {
+            margin: 2rem 0;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--gold-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 30px;
+            background: linear-gradient(180deg, var(--gold-primary), var(--gold-accent));
+            border-radius: 2px;
+        }
+
+        .hosts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .host-card {
+            background: linear-gradient(135deg, var(--black-secondary) 0%, rgba(26, 26, 26, 0.8) 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: var(--shadow-dark);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .host-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .host-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(212, 175, 55, 0.4);
+            border-color: var(--gold-primary);
+        }
+
+        .host-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .host-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .host-id {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            background: rgba(212, 175, 55, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .progress-section {
+            margin: 1.5rem 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .progress-text {
+            color: var(--text-secondary);
+        }
+
+        .progress-value {
+            color: var(--gold-primary);
+            font-weight: 600;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 12px;
+            background: var(--black-tertiary);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-primary), var(--gold-accent));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            position: relative;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: progress-shine 2s infinite;
+        }
+
+        @keyframes progress-shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .host-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .last-updated {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .update-form {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .progress-input {
+            width: 80px;
+            padding: 0.5rem;
+            background: var(--black-tertiary);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .progress-input:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            border-radius: 6px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, var(--black-secondary) 0%, var(--black-tertiary) 100%);
+            border-radius: 16px;
+            border: 2px dashed rgba(212, 175, 55, 0.3);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--gold-primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 1.8rem;
+            }
+
+            .hosts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Success Message */
+        .success-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-secondary));
+            color: var(--black-primary);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-gold);
+            font-weight: 600;
+            animation: slideIn 0.3s ease;
+            z-index: 1000;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">NINE</h1>
+                <div class="header-actions">
+                    <button class="btn" onclick="refreshData()">
+                        <span id="refresh-icon">↻</span> Refresh
+                    </button>
+                    <button class="btn btn-primary" onclick="alert('Add Host feature coming soon!')">
+                        + Add Host
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Hosts</div>
+                    <div class="stat-value" id="total-hosts">{{ hosts|length }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Average Progress</div>
+                    <div class="stat-value" id="avg-progress">
+                        {% if hosts %}
+                            {{ (hosts|sum(attribute='progress') / hosts|length)|round(1) }}%
+                        {% else %}
+                            0%
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Active Monitoring</div>
+                    <div class="stat-value">
+                        <span style="color: #4ade80;">●</span> Live
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Last Update</div>
+                    <div class="stat-value" style="font-size: 1.2rem;" id="last-update">Just now</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hosts Section -->
+        <section class="hosts-section">
+            <h2 class="section-title">Host Monitoring</h2>
+
+            {% if hosts %}
+            <div class="hosts-grid" id="hosts-grid">
+                {% for host in hosts %}
+                <div class="host-card" data-host-id="{{ host.id }}">
+                    <div class="host-header">
+                        <h3 class="host-name">{{ host.name }}</h3>
+                        <span class="host-id">ID: {{ host.id }}</span>
+                    </div>
+
+                    <div class="progress-section">
+                        <div class="progress-label">
+                            <span class="progress-text">Progress</span>
+                            <span class="progress-value">{{ host.progress }}%</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: {{ host.progress }}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="host-meta">
+                        <span class="last-updated">
+                            {% if host.profile_last_updated %}
+                                Updated: {{ host.profile_last_updated.strftime('%H:%M:%S') }}
+                            {% else %}
+                                Never updated
+                            {% endif %}
+                        </span>
+                        <form class="update-form" onsubmit="updateProgress(event, {{ host.id }})">
+                            <input
+                                type="number"
+                                class="progress-input"
+                                name="progress"
+                                value="{{ host.progress }}"
+                                min="0"
+                                max="100"
+                                required
+                            >
+                            <button type="submit" class="btn btn-primary btn-small">Update</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">📊</div>
+                <div class="empty-state-text">No hosts found</div>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    Get started by adding your first host to track
+                </p>
+                <button class="btn btn-primary" onclick="alert('Add Host feature coming soon!')">
+                    + Add Your First Host
+                </button>
+            </div>
+            {% endif %}
+        </section>
+    </main>
+
+    <script>
+        // Update progress for a host
+        async function updateProgress(event, hostId) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const progressValue = formData.get('progress');
+
+            try {
+                const response = await fetch(`/hosts/${hostId}/progress`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ progress: parseInt(progressValue) })
+                });
+
+                if (response.ok) {
+                    showSuccessMessage('Progress updated successfully!');
+                    // Refresh the page to show updated data
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    alert('Failed to update progress');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error updating progress');
+            }
+        }
+
+        // Refresh data
+        function refreshData() {
+            const icon = document.getElementById('refresh-icon');
+            icon.style.display = 'inline-block';
+            icon.style.animation = 'spin 1s ease-in-out';
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+        }
+
+        // Show success message
+        function showSuccessMessage(message) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'success-message';
+            msgDiv.textContent = message;
+            document.body.appendChild(msgDiv);
+
+            setTimeout(() => {
+                msgDiv.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => msgDiv.remove(), 300);
+            }, 2000);
+        }
+
+        // Update last update time
+        function updateLastUpdateTime() {
+            const lastUpdateEl = document.getElementById('last-update');
+            const now = new Date();
+            lastUpdateEl.textContent = now.toLocaleTimeString();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateLastUpdateTime();
+            setInterval(updateLastUpdateTime, 60000); // Update every minute
+        });
+    </script>
+</body>
+</html>

@@ -57,8 +57,16 @@ def list_hosts():
     return jsonify(result)
 
 
+@app.route('/')
+def dashboard():
+    """Main dashboard view."""
+    hosts = Host.query.all()
+    return render_template('dashboard.html', hosts=hosts)
+
+
 @app.route('/progress_form')
 def progress_form():
+    """Legacy form view (kept for backward compatibility)."""
     hosts = Host.query.all()
     return render_template('progress_form.html', hosts=hosts)
 
