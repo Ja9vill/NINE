@@ -22,6 +22,17 @@
             --text-secondary: #b0b0b0;
             --shadow-gold: 0 4px 20px rgba(212, 175, 55, 0.3);
             --shadow-dark: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+
+        [data-theme="light"] {
+            --black-primary: #f5f5f5;
+            --black-secondary: #ffffff;
+            --black-tertiary: #e5e5e5;
+            --text-primary: #0a0a0a;
+            --text-secondary: #4a4a4a;
+            --shadow-dark: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
         body {
@@ -31,6 +42,7 @@
             min-height: 100vh;
             padding: 0;
             overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         /* Header Styles */
@@ -39,7 +51,9 @@
             padding: 2rem 0;
             box-shadow: var(--shadow-dark);
             border-bottom: 2px solid var(--gold-primary);
-            position: relative;
+            position: sticky;
+            top: 0;
+            z-index: 100;
             overflow: hidden;
         }
 
@@ -87,6 +101,7 @@
         .header-actions {
             display: flex;
             gap: 1rem;
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -101,6 +116,9 @@
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .btn:hover {
@@ -119,6 +137,51 @@
         .btn-primary:hover {
             background: linear-gradient(135deg, var(--gold-secondary) 0%, var(--gold-accent) 100%);
             transform: translateY(-2px) scale(1.05);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            border-color: #dc2626;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            width: 60px;
+            height: 30px;
+            background: var(--black-tertiary);
+            border: 2px solid var(--gold-primary);
+            border-radius: 15px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle::after {
+            content: '🌙';
+            position: absolute;
+            top: 50%;
+            left: 4px;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background: var(--gold-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] .theme-toggle::after {
+            content: '☀️';
+            left: calc(100% - 24px);
         }
 
         /* Stats Section */
@@ -175,11 +238,96 @@
             text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
         }
 
-        /* Hosts Section */
-        .hosts-section {
+        /* Charts Section */
+        .charts-section {
             margin: 2rem 0;
         }
 
+        .chart-container {
+            background: linear-gradient(135deg, var(--black-secondary) 0%, var(--black-tertiary) 100%);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: var(--shadow-dark);
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            color: var(--gold-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        #progressChart {
+            width: 100%;
+            height: 300px;
+        }
+
+        /* Controls Section */
+        .controls-section {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-container {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--black-tertiary);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: var(--shadow-gold);
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        .custom-select {
+            padding: 0.75rem 2.5rem 0.75rem 1rem;
+            background: var(--black-tertiary);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+        }
+
+        .custom-select:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: var(--shadow-gold);
+        }
+
+        .select-wrapper::after {
+            content: '▼';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gold-primary);
+            pointer-events: none;
+        }
+
+        /* Section Title */
         .section-title {
             font-size: 1.8rem;
             margin-bottom: 1.5rem;
@@ -197,10 +345,12 @@
             border-radius: 2px;
         }
 
+        /* Hosts Grid */
         .hosts-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .host-card {
@@ -212,6 +362,10 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+        }
+
+        [data-theme="light"] .host-card {
+            background: linear-gradient(135deg, var(--black-secondary) 0%, rgba(255, 255, 255, 0.8) 100%);
         }
 
         .host-card::after {
@@ -242,6 +396,30 @@
             font-size: 1.3rem;
             font-weight: 600;
             color: var(--text-primary);
+        }
+
+        .host-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .icon-btn:hover {
+            color: var(--gold-primary);
+            transform: scale(1.1);
+        }
+
+        .icon-btn.delete:hover {
+            color: var(--danger);
         }
 
         .host-id {
@@ -351,6 +529,182 @@
             border-radius: 6px;
         }
 
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 2rem 0;
+        }
+
+        .page-btn {
+            padding: 0.5rem 1rem;
+            background: var(--black-tertiary);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            color: var(--text-primary);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background: var(--gold-primary);
+            color: var(--black-primary);
+            border-color: var(--gold-primary);
+        }
+
+        .page-btn.active {
+            background: var(--gold-primary);
+            color: var(--black-primary);
+            border-color: var(--gold-primary);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--black-secondary) 0%, var(--black-tertiary) 100%);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 2px solid var(--gold-primary);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            max-width: 500px;
+            width: 90%;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--gold-primary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--gold-primary);
+            transform: rotate(90deg);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--black-tertiary);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: var(--shadow-gold);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        /* Success/Error Messages */
+        .message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-gold);
+            font-weight: 600;
+            animation: slideIn 0.3s ease;
+            z-index: 1001;
+            max-width: 400px;
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
         /* Empty State */
         .empty-state {
             text-align: center;
@@ -372,21 +726,6 @@
             margin-bottom: 1rem;
         }
 
-        /* Loading Animation */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(212, 175, 55, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--gold-primary);
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
         /* Responsive Design */
         @media (max-width: 768px) {
             .logo {
@@ -405,46 +744,35 @@
                 flex-direction: column;
                 text-align: center;
             }
-        }
 
-        /* Success Message */
-        .success-message {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, var(--gold-primary), var(--gold-secondary));
-            color: var(--black-primary);
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            box-shadow: var(--shadow-gold);
-            font-weight: 600;
-            animation: slideIn 0.3s ease;
-            z-index: 1000;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
+            .controls-section {
+                flex-direction: column;
             }
-            to {
-                transform: translateX(0);
-                opacity: 1;
+
+            .search-container {
+                width: 100%;
             }
         }
     </style>
 </head>
-<body>
+<body data-theme="dark">
     <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="header-content">
                 <h1 class="logo">NINE</h1>
                 <div class="header-actions">
+                    <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme"></div>
+                    <button class="btn" onclick="exportData('csv')">
+                        📥 Export CSV
+                    </button>
+                    <button class="btn" onclick="exportData('json')">
+                        📥 Export JSON
+                    </button>
                     <button class="btn" onclick="refreshData()">
                         <span id="refresh-icon">↻</span> Refresh
                     </button>
-                    <button class="btn btn-primary" onclick="alert('Add Host feature coming soon!')">
+                    <button class="btn btn-primary" onclick="openAddHostModal()">
                         + Add Host
                     </button>
                 </div>
@@ -472,15 +800,50 @@
                     </div>
                 </div>
                 <div class="stat-card">
+                    <div class="stat-label">Completed Hosts</div>
+                    <div class="stat-value" id="completed-hosts">
+                        {{ hosts|selectattr('progress', 'eq', 100)|list|length }}
+                    </div>
+                </div>
+                <div class="stat-card">
                     <div class="stat-label">Active Monitoring</div>
                     <div class="stat-value">
                         <span style="color: #4ade80;">●</span> Live
                     </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-label">Last Update</div>
-                    <div class="stat-value" style="font-size: 1.2rem;" id="last-update">Just now</div>
-                </div>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        {% if hosts %}
+        <section class="charts-section">
+            <div class="chart-container">
+                <h3 class="chart-title">Progress Distribution</h3>
+                <canvas id="progressChart"></canvas>
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- Controls Section -->
+        <section class="controls-section">
+            <div class="search-container">
+                <input
+                    type="text"
+                    class="search-input"
+                    id="searchInput"
+                    placeholder="🔍 Search hosts..."
+                    oninput="filterHosts()"
+                >
+            </div>
+            <div class="select-wrapper">
+                <select class="custom-select" id="sortSelect" onchange="sortHosts()">
+                    <option value="name-asc">Name (A-Z)</option>
+                    <option value="name-desc">Name (Z-A)</option>
+                    <option value="progress-asc">Progress (Low to High)</option>
+                    <option value="progress-desc">Progress (High to Low)</option>
+                    <option value="id-asc">ID (Ascending)</option>
+                    <option value="id-desc">ID (Descending)</option>
+                </select>
             </div>
         </section>
 
@@ -488,14 +851,28 @@
         <section class="hosts-section">
             <h2 class="section-title">Host Monitoring</h2>
 
+            <div id="noResults" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">🔍</div>
+                <div class="empty-state-text">No hosts found</div>
+                <p style="color: var(--text-secondary);">
+                    Try adjusting your search criteria
+                </p>
+            </div>
+
             {% if hosts %}
             <div class="hosts-grid" id="hosts-grid">
                 {% for host in hosts %}
-                <div class="host-card" data-host-id="{{ host.id }}">
+                <div class="host-card" data-host-id="{{ host.id }}" data-host-name="{{ host.name|lower }}" data-host-progress="{{ host.progress }}">
                     <div class="host-header">
                         <h3 class="host-name">{{ host.name }}</h3>
-                        <span class="host-id">ID: {{ host.id }}</span>
+                        <div class="host-actions">
+                            <button class="icon-btn delete" onclick="confirmDelete({{ host.id }}, '{{ host.name }}')" title="Delete Host">
+                                🗑️
+                            </button>
+                        </div>
                     </div>
+
+                    <div class="host-id">ID: {{ host.id }}</div>
 
                     <div class="progress-section">
                         <div class="progress-label">
@@ -531,6 +908,9 @@
                 </div>
                 {% endfor %}
             </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination"></div>
             {% else %}
             <div class="empty-state">
                 <div class="empty-state-icon">📊</div>
@@ -538,7 +918,7 @@
                 <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
                     Get started by adding your first host to track
                 </p>
-                <button class="btn btn-primary" onclick="alert('Add Host feature coming soon!')">
+                <button class="btn btn-primary" onclick="openAddHostModal()">
                     + Add Your First Host
                 </button>
             </div>
@@ -546,8 +926,285 @@
         </section>
     </main>
 
+    <!-- Add Host Modal -->
+    <div class="modal" id="addHostModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Host</h2>
+                <button class="close-btn" onclick="closeAddHostModal()">&times;</button>
+            </div>
+            <form id="addHostForm" onsubmit="addHost(event)">
+                <div class="form-group">
+                    <label class="form-label" for="hostName">Host Name</label>
+                    <input
+                        type="text"
+                        class="form-input"
+                        id="hostName"
+                        name="name"
+                        placeholder="Enter host name"
+                        required
+                    >
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="hostProgress">Initial Progress (%)</label>
+                    <input
+                        type="number"
+                        class="form-input"
+                        id="hostProgress"
+                        name="progress"
+                        value="0"
+                        min="0"
+                        max="100"
+                        required
+                    >
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn" onclick="closeAddHostModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Host</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Confirm Delete</h2>
+                <button class="close-btn" onclick="closeDeleteModal()">&times;</button>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                Are you sure you want to delete host <strong id="deleteHostName" style="color: var(--gold-primary);"></strong>?
+                This action cannot be undone.
+            </p>
+            <div class="modal-actions">
+                <button class="btn" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn btn-danger" onclick="deleteHost()">Delete</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Update progress for a host
+        // Global variables
+        let currentPage = 1;
+        const itemsPerPage = 6;
+        let allHosts = [];
+        let filteredHosts = [];
+        let hostToDelete = null;
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeHosts();
+            drawChart();
+            updatePagination();
+        });
+
+        // Initialize hosts array
+        function initializeHosts() {
+            const hostCards = document.querySelectorAll('.host-card');
+            allHosts = Array.from(hostCards);
+            filteredHosts = [...allHosts];
+        }
+
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+
+            // Redraw chart with new theme
+            setTimeout(() => drawChart(), 100);
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.body.setAttribute('data-theme', savedTheme);
+
+        // Search and Filter
+        function filterHosts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+            filteredHosts = allHosts.filter(card => {
+                const name = card.getAttribute('data-host-name');
+                return name.includes(searchTerm);
+            });
+
+            currentPage = 1;
+            updatePagination();
+            displayHosts();
+        }
+
+        // Sort Hosts
+        function sortHosts() {
+            const sortValue = document.getElementById('sortSelect').value;
+            const [field, order] = sortValue.split('-');
+
+            filteredHosts.sort((a, b) => {
+                let aVal, bVal;
+
+                if (field === 'name') {
+                    aVal = a.getAttribute('data-host-name');
+                    bVal = b.getAttribute('data-host-name');
+                } else if (field === 'progress') {
+                    aVal = parseInt(a.getAttribute('data-host-progress'));
+                    bVal = parseInt(b.getAttribute('data-host-progress'));
+                } else if (field === 'id') {
+                    aVal = parseInt(a.getAttribute('data-host-id'));
+                    bVal = parseInt(b.getAttribute('data-host-id'));
+                }
+
+                if (order === 'asc') {
+                    return aVal > bVal ? 1 : -1;
+                } else {
+                    return aVal < bVal ? 1 : -1;
+                }
+            });
+
+            currentPage = 1;
+            displayHosts();
+        }
+
+        // Display Hosts with Pagination
+        function displayHosts() {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const noResults = document.getElementById('noResults');
+
+            // Hide all hosts first
+            allHosts.forEach(card => card.style.display = 'none');
+
+            if (filteredHosts.length === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+
+                // Show only the hosts for current page
+                filteredHosts.slice(startIndex, endIndex).forEach(card => {
+                    card.style.display = 'block';
+                });
+            }
+
+            updatePagination();
+        }
+
+        // Update Pagination
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredHosts.length / itemsPerPage);
+            const pagination = document.getElementById('pagination');
+
+            if (!pagination || totalPages <= 1) {
+                if (pagination) pagination.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+
+            // Previous button
+            html += `<button class="page-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹ Prev</button>`;
+
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    html += `<span style="color: var(--text-secondary); padding: 0.5rem;">...</span>`;
+                }
+            }
+
+            // Next button
+            html += `<button class="page-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next ›</button>`;
+
+            pagination.innerHTML = html;
+        }
+
+        // Change Page
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredHosts.length / itemsPerPage);
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            displayHosts();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Add Host Modal
+        function openAddHostModal() {
+            document.getElementById('addHostModal').classList.add('active');
+        }
+
+        function closeAddHostModal() {
+            document.getElementById('addHostModal').classList.remove('active');
+            document.getElementById('addHostForm').reset();
+        }
+
+        // Add Host
+        async function addHost(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = {
+                name: formData.get('name'),
+                progress: parseInt(formData.get('progress'))
+            };
+
+            try {
+                const response = await fetch('/hosts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    showMessage('Host added successfully!', 'success');
+                    closeAddHostModal();
+                    setTimeout(() => window.location.reload(), 1000);
+                } else {
+                    const error = await response.json();
+                    showMessage(error.error || 'Failed to add host', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error adding host', 'error');
+            }
+        }
+
+        // Delete Host Modal
+        function confirmDelete(hostId, hostName) {
+            hostToDelete = hostId;
+            document.getElementById('deleteHostName').textContent = hostName;
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('active');
+            hostToDelete = null;
+        }
+
+        async function deleteHost() {
+            if (!hostToDelete) return;
+
+            try {
+                const response = await fetch(`/hosts/${hostToDelete}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showMessage('Host deleted successfully!', 'success');
+                    closeDeleteModal();
+                    setTimeout(() => window.location.reload(), 1000);
+                } else {
+                    showMessage('Failed to delete host', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Error deleting host', 'error');
+            }
+        }
+
+        // Update Progress
         async function updateProgress(event, hostId) {
             event.preventDefault();
             const form = event.target;
@@ -564,56 +1221,143 @@
                 });
 
                 if (response.ok) {
-                    showSuccessMessage('Progress updated successfully!');
-                    // Refresh the page to show updated data
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
+                    showMessage('Progress updated successfully!', 'success');
+                    setTimeout(() => window.location.reload(), 1000);
                 } else {
-                    alert('Failed to update progress');
+                    showMessage('Failed to update progress', 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error updating progress');
+                showMessage('Error updating progress', 'error');
             }
         }
 
-        // Refresh data
+        // Refresh Data
         function refreshData() {
             const icon = document.getElementById('refresh-icon');
             icon.style.display = 'inline-block';
             icon.style.animation = 'spin 1s ease-in-out';
 
-            setTimeout(() => {
-                window.location.reload();
-            }, 500);
+            setTimeout(() => window.location.reload(), 500);
         }
 
-        // Show success message
-        function showSuccessMessage(message) {
+        // Export Data
+        function exportData(format) {
+            window.location.href = `/export/${format}`;
+            showMessage(`Exporting data as ${format.toUpperCase()}...`, 'success');
+        }
+
+        // Show Message
+        function showMessage(message, type) {
             const msgDiv = document.createElement('div');
-            msgDiv.className = 'success-message';
+            msgDiv.className = `message ${type}`;
             msgDiv.textContent = message;
             document.body.appendChild(msgDiv);
 
             setTimeout(() => {
                 msgDiv.style.animation = 'slideIn 0.3s ease reverse';
                 setTimeout(() => msgDiv.remove(), 300);
-            }, 2000);
+            }, 3000);
         }
 
-        // Update last update time
-        function updateLastUpdateTime() {
-            const lastUpdateEl = document.getElementById('last-update');
-            const now = new Date();
-            lastUpdateEl.textContent = now.toLocaleTimeString();
+        // Draw Progress Chart
+        function drawChart() {
+            const canvas = document.getElementById('progressChart');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            const theme = document.body.getAttribute('data-theme');
+
+            // Get all host progress values
+            const hostCards = document.querySelectorAll('.host-card');
+            const progressData = Array.from(hostCards).map(card =>
+                parseInt(card.getAttribute('data-host-progress'))
+            );
+
+            if (progressData.length === 0) return;
+
+            // Set canvas size
+            canvas.width = canvas.offsetWidth;
+            canvas.height = 300;
+
+            const width = canvas.width;
+            const height = canvas.height;
+            const padding = 40;
+            const barWidth = (width - padding * 2) / progressData.length;
+            const maxValue = 100;
+
+            // Colors based on theme
+            const gridColor = theme === 'dark' ? 'rgba(212, 175, 55, 0.2)' : 'rgba(212, 175, 55, 0.3)';
+            const textColor = theme === 'dark' ? '#b0b0b0' : '#4a4a4a';
+            const barGradientStart = '#d4af37';
+            const barGradientEnd = '#ffd700';
+
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw grid lines
+            ctx.strokeStyle = gridColor;
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const y = height - padding - (height - padding * 2) * (i / 5);
+                ctx.beginPath();
+                ctx.moveTo(padding, y);
+                ctx.lineTo(width - padding, y);
+                ctx.stroke();
+
+                // Draw labels
+                ctx.fillStyle = textColor;
+                ctx.font = '12px Segoe UI';
+                ctx.textAlign = 'right';
+                ctx.fillText(`${i * 20}%`, padding - 10, y + 4);
+            }
+
+            // Draw bars
+            progressData.forEach((progress, index) => {
+                const x = padding + index * barWidth + barWidth * 0.1;
+                const barHeight = ((height - padding * 2) * progress) / maxValue;
+                const y = height - padding - barHeight;
+                const actualBarWidth = barWidth * 0.8;
+
+                // Create gradient
+                const gradient = ctx.createLinearGradient(x, y, x, height - padding);
+                gradient.addColorStop(0, barGradientStart);
+                gradient.addColorStop(1, barGradientEnd);
+
+                // Draw bar
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x, y, actualBarWidth, barHeight);
+
+                // Draw value on top
+                ctx.fillStyle = textColor;
+                ctx.font = 'bold 12px Segoe UI';
+                ctx.textAlign = 'center';
+                ctx.fillText(`${progress}%`, x + actualBarWidth / 2, y - 5);
+            });
         }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            updateLastUpdateTime();
-            setInterval(updateLastUpdateTime, 60000); // Update every minute
+        // Close modals on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeAddHostModal();
+                closeDeleteModal();
+            }
         });
+
+        // Close modals on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeAddHostModal();
+                    closeDeleteModal();
+                }
+            });
+        });
+
+        // Initial display
+        if (allHosts.length > 0) {
+            displayHosts();
+        }
     </script>
 </body>
 </html>
